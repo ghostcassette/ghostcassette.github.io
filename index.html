@@ -3,26 +3,37 @@
   <head>
     <meta charset=utf-8>
     <title>Ghost Cassette - Software development consultancy</title>
-    <meta name=description content="Ghost Cassette is a software development consultancy.">
+    <meta name=description content="Ghost Cassette is a software development consultancy specialising in web application development, agile coaching and mentoring software development teams.">
     <meta name=viewport content="width=device-width, initial-scale=1">
     <style>
       body, html {
         height: 100%;
-        display: grid;
         margin: 0;
       }
       body {
-        background: rgb(0,115,105);
-        background: -moz-linear-gradient(90deg, rgba(0,115,105,1) 0%, rgba(0,140,114,1) 35%, rgba(2,166,118,1) 100%);
-        background: -webkit-linear-gradient(90deg, rgba(0,115,105,1) 0%, rgba(0,140,114,1) 35%, rgba(2,166,118,1) 100%);
-        background: linear-gradient(90deg, rgba(0,115,105,1) 0%, rgba(0,140,114,1) 35%, rgba(2,166,118,1) 100%);
-        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#007369",endColorstr="#02a676",GradientType=1);
+        background: rgb(0,56,64);
+        background: -moz-linear-gradient(-45deg, rgba(0,56,64,1) 0%, rgba(2,166,118,1) 25%, rgba(0,115,105,1) 50%, rgba(0,90,91,1) 75%, rgba(0,140,114,1) 100%);
+        background: -webkit-linear-gradient(-45deg, rgba(0,56,64,1) 0%, rgba(2,166,118,1) 25%, rgba(0,115,105,1) 50%, rgba(0,90,91,1) 75%, rgba(0,140,114,1) 100%);
+        background: linear-gradient(-45deg, rgba(0,56,64,1) 0%, rgba(2,166,118,1) 25%, rgba(0,115,105,1) 50%, rgba(0,90,91,1) 75%, rgba(0,140,114,1) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#003840",endColorstr="#008c72",GradientType=1);
+        background-size: 400% 400%;
+        -webkit-animation: Gradient 15s ease infinite;
+        -moz-animation: Gradient 15s ease infinite;
+        animation: Gradient 15s ease infinite;
         color: #fff;
         font: 1em/1.4 -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, sans-serif;
+        display: table;
       }
       main {
-        margin: auto;
-        width: 80%;
+        display: table-cell;
+        vertical-align: middle;
+        padding: 4em;
+      }
+      a {
+        color: #fff;
+        font-weight: bold;
+        text-decoration: none;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.6);
       }
       .ghost {
         width: 125px;
@@ -30,14 +41,49 @@
         background: url(gc-logo-final-white.png);
         background-image: url(gc-logo-final-white.svg), none;
       }
+      footer {
+        color: rgba(255, 255, 255, 0.6);
+      }
+      @-webkit-keyframes Gradient {
+        0% {
+          background-position: 0% 50%
+        }
+        50% {
+          background-position: 100% 50%
+        }
+        100% {
+          background-position: 0% 50%
+        }
+      }
+      @-moz-keyframes Gradient {
+        0% {
+          background-position: 0% 50%
+        }
+        50% {
+          background-position: 100% 50%
+        }
+        100% {
+          background-position: 0% 50%
+        }
+      }
+      @keyframes Gradient {
+        0% {
+          background-position: 0% 50%
+        }
+        50% {
+          background-position: 100% 50%
+        }
+        100% {
+          background-position: 0% 50%
+        }
+      }
     </style>
   </head>
   <body>
     <main>
       <div class=ghost>&nbsp;</div>
-      <h1>
-        Ghost Cassette is a software development consultancy.
-      </h1>
+      <h1>Ghost Cassette is a software development consultancy.</h1>
+      <p>Looking for help with web application development, agile coaching &amp; mentoring software development teams? <a href=mailto:hello@ghostcassette.com>Get in touch.</a>
       <footer>Ghost Cassette Ltd is registered in England and Wales with company number 11839376.<br>Registered office: 13b The Vale, London, England, W3 7SH</footer>
     </main>
   </body>
