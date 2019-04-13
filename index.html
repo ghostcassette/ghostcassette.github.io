@@ -2,91 +2,61 @@
 <html>
   <head>
     <meta charset=utf-8>
-    <title>Ghost Cassette - Software development consultancy</title>
+    <title>Ghost Cassette - Software Development Consultancy</title>
     <meta name=description content="Ghost Cassette is a software development consultancy specialising in web application development, agile coaching and mentoring software development teams.">
     <meta name=viewport content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
     <style>
-      body, html {
-        height: 100%;
-        margin: 0;
+      html {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100%;
+      }
+      @media screen {
+        body {
+          max-width: 40rem;
+          margin: 3rem;
+        }
       }
       body {
-        background: rgb(0,56,64);
-        background: -moz-linear-gradient(-45deg, rgba(0,56,64,1) 0%, rgba(2,166,118,1) 25%, rgba(0,115,105,1) 50%, rgba(0,90,91,1) 75%, rgba(0,140,114,1) 100%);
-        background: -webkit-linear-gradient(-45deg, rgba(0,56,64,1) 0%, rgba(2,166,118,1) 25%, rgba(0,115,105,1) 50%, rgba(0,90,91,1) 75%, rgba(0,140,114,1) 100%);
-        background: linear-gradient(-45deg, rgba(0,56,64,1) 0%, rgba(2,166,118,1) 25%, rgba(0,115,105,1) 50%, rgba(0,90,91,1) 75%, rgba(0,140,114,1) 100%);
-        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#003840",endColorstr="#008c72",GradientType=1);
-        background-size: 400% 400%;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        -webkit-animation: Gradient 15s ease infinite;
-        -moz-animation: Gradient 15s ease infinite;
-        animation: Gradient 15s ease infinite;
+        background: rgb(25,43,56);
+        background: -moz-linear-gradient(-45deg, rgba(25,43,56,1) 0%, rgba(34,66,75,1) 24%, rgba(46,84,88,1) 39%, rgba(78,115,103,1) 62%, rgba(127,166,140,1) 100%);
+        background: -webkit-linear-gradient(-45deg, rgba(25,43,56,1) 0%, rgba(34,66,75,1) 24%, rgba(46,84,88,1) 39%, rgba(78,115,103,1) 62%, rgba(127,166,140,1) 100%);
+        background: linear-gradient(-45deg, rgba(25,43,56,1) 0%, rgba(34,66,75,1) 24%, rgba(46,84,88,1) 39%, rgba(78,115,103,1) 62%, rgba(127,166,140,1) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#192b38",endColorstr="#7fa68c",GradientType=1);
         color: #fff;
         font: 1em/1.4 -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, sans-serif;
-        display: table;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
-      }
-      main {
-        display: table-cell;
-        vertical-align: middle;
-        padding: 4em;
+        text-rendering: optimizeLegibility;
       }
       a {
         color: #fff;
-        font-weight: bold;
         text-decoration: none;
         border-bottom: 2px solid rgba(255, 255, 255, 0.6);
       }
-      .minor {
-        font-weight: normal;
-        border-bottom-width: 1px;
-      }
       .ghost {
-        width: 125px;
+        width: 95px;
         height: 125px;
         background: url(gc-logo-final-white.png);
         background-image: url(gc-logo-final-white.svg), none;
+        background-repeat: no-repeat;
       }
       footer {
         color: rgba(255, 255, 255, 0.6);
       }
-      ul {
-        padding: 0;
+      .cta {
+        text-align: center;
+        background: rgba(255,255,255,0.9);
+        color: rgb(25,43,56);
+        display: block;
+        padding: 0.6rem 2rem;
+        font-weight: bold;
+        border-radius: 0.5rem;
       }
-      @-webkit-keyframes Gradient {
-        0% {
-          background-position: 0% 50%
-        }
-        50% {
-          background-position: 100% 50%
-        }
-        100% {
-          background-position: 0% 50%
-        }
-      }
-      @-moz-keyframes Gradient {
-        0% {
-          background-position: 0% 50%
-        }
-        50% {
-          background-position: 100% 50%
-        }
-        100% {
-          background-position: 0% 50%
-        }
-      }
-      @keyframes Gradient {
-        0% {
-          background-position: 0% 50%
-        }
-        50% {
-          background-position: 100% 50%
-        }
-        100% {
-          background-position: 0% 50%
-        }
+      li {
+        margin-bottom: 1rem;
       }
     </style>
   </head>
@@ -94,15 +64,14 @@
     <main>
       <div class=ghost>&nbsp;</div>
       <h1>Ghost Cassette is a software development consultancy.</h1>
-      <p>Looking for help with web application development, agile coaching &amp; mentoring software development teams? We have over a decade&rsquo;s experience developing software in teams and are open-source contributors to the <a class=minor href=https://www.ruby-lang.org/en/>Ruby programming language</a> and <a class=minor href=https://rubyonrails.org>Ruby on Rails</a>.</p>
-      <p><a href=mailto:hello@ghostcassette.com>Get in touch.</a></p>
-      <p>Recent projects include:</p>
-      <ul>
-        <li>Completely refactoring and increasing the test coverage of a business critical payment system for a client in order to significantly reduce cost of maintenance and deliver a new export format to customers;</li>
-        <li>Running an agile team retrospective and presenting Story Mapping as a way to break down large projects into meaningful slices to an entire development team in both London and Lisbon;</li>
-        <li>Redesigning a client&rsquo;s AWS infrastructure using VPCs divided into public and private subnets with EC2 instances organised into auto-scaling groups running Hashicorp&rsquo;s Consul and Nomad, automating the entire process using Hashicorp Terraform;</li>
-        <li>Setting up a continuous deployment pipeline using GitHub and CircleCI to build Docker images, push them to ECR and then submit them as Nomad jobs on successful builds.</li>
+      <p>Looking for help with web application development, continuous delivery, agile coaching, mentoring &amp; leading software development teams?</p>
+      <ul class="fa-ul">
+        <li><span class="fa-li"><i class="far fa-calendar-check"></i></span> Over a decade&rsquo;s experience developing software in teams including fostering cultures of continuous improvement through agile ways of working.</li>
+        <li><span class="fa-li"><i class="far fa-gem"></i></span> Open-source contributors to the <a href=https://www.ruby-lang.org/en/>Ruby programming language</a> and <a href=https://rubyonrails.org>Ruby on Rails</a>.</li>
+        <li><span class="fa-li"><i class="fas fa-cloud-upload-alt"></i></span> Production experience building continuous delivery processes &amp; pipelines using <a href="https://github.com">GitHub</a>, <a href="https://aws.amazon.com">Amazon Web Services</a>, <a href="https://www.heroku.com">Heroku</a>, <a href="https://www.docker.com">Docker</a>, <a href="https://www.nomadproject.io">HashiCorp Nomad</a>, <a href="https://www.consul.io">Consul</a> &amp; <a href="https://www.terraform.io">Terraform</a>.</li>
+        <li><span class="fa-li"><i class="fas fa-broom"></i></span> Experience reducing technical debt to improve productivity by building cultures of quality and pragmatism.</li>
       </ul>
+      <p><a class=cta href=mailto:hello@ghostcassette.com>Get in touch</a></p>
       <footer>Ghost Cassette Ltd is registered in England and Wales with company number 11839376 and VAT registration number GB 316886961.<br>Registered office: 13b The Vale, London, England, W3 7SH</footer>
     </main>
   </body>
