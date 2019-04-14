@@ -5,7 +5,6 @@
     <title>Ghost Cassette - Software Development Consultancy</title>
     <meta name=description content="Ghost Cassette is a software development consultancy specialising in web application development, continuous delivery, agile coaching, mentoring and leading software development teams.">
     <meta name=viewport content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
     <style>
       html {
         display: flex;
@@ -20,7 +19,7 @@
         }
       }
       body {
-        background: rgb(35,48,87);
+        background: #233057;
         background: -moz-linear-gradient(-45deg, rgba(35,48,87,1) 0%, rgba(39,69,97,1) 24%, rgba(33,65,74,1) 39%, rgba(39,97,94,1) 62%, rgba(35,87,69,1) 100%);
         background: -webkit-linear-gradient(-45deg, rgba(35,48,87,1) 0%, rgba(39,69,97,1) 24%, rgba(33,65,74,1) 39%, rgba(39,97,94,1) 62%, rgba(35,87,69,1) 100%);
         background: linear-gradient(-45deg, rgba(35,48,87,1) 0%, rgba(39,69,97,1) 24%, rgba(33,65,74,1) 39%, rgba(39,97,94,1) 62%, rgba(35,87,69,1) 100%);
@@ -51,15 +50,70 @@
       .cta {
         text-align: center;
         background: rgba(255,255,255,0.9);
-        color: rgb(35,48,87);
+        color: #233057;
         display: block;
         padding: 0.6rem 2rem;
-        font-weight: bold;
+        font-weight: 700;
         border-radius: 0.5rem;
         margin: 2rem 0;
       }
       li {
         margin-bottom: 1rem;
+      }
+      .fa,
+      .far,
+      .fas {
+        display: inline-block;
+        font-style: normal;
+        font-variant: normal;
+        text-rendering: auto;
+        line-height: 1;
+        font-family: fontello;
+        font-weight: 400;
+      }
+      .fa-ul {
+        list-style-type: none;
+        margin-left: 2.5em;
+        padding-left: 0;
+      }
+      .fa-ul > li {
+        position: relative;
+      }
+      .fa-li {
+        left: -2em;
+        position: absolute;
+        text-align: center;
+        width: 2em;
+        line-height: inherit;
+      }
+      .fa-calendar-check:before {
+        content: '\e800';
+      }
+      .fa-sticky-note:before {
+        content: '\e801';
+      }
+      .fa-gem:before {
+        content: '\e802';
+      }
+      .fa-code-branch:before {
+        content: '\e803';
+      }
+      .fa-cloud-upload-alt:before {
+        content: '\e805';
+      }
+      .fa-broom:before {
+        content: '\e806';
+      }
+      @font-face {
+        font-family: fontello;
+        src: url('fontello.eot?44889133');
+        src: url('fontello.eot?44889133#iefix') format('embedded-opentype'),
+             url('fontello.woff2?44889133') format('woff2'),
+             url('fontello.woff?44889133') format('woff'),
+             url('fontello.ttf?44889133') format('truetype'),
+             url('fontello.svg?44889133#fontello') format('svg');
+        font-weight: 400;
+        font-style: normal;
       }
     </style>
   </head>
@@ -72,7 +126,7 @@
       <li><span class="fa-li"><i class="far fa-calendar-check"></i></span> Over a decade&rsquo;s experience developing software in teams.</li>
       <li><span class="fa-li"><i class="far fa-sticky-note"></i></span> Experience introducing &amp; improving software development processes such as Kanban &amp; Scrum; running stand-ups, planning, demos, retrospectives &amp; workshops on <a href="https://www.jpattonassociates.com/user-story-mapping/">Story Mapping</a> &amp; <a href="https://cucumber.io/blog/2015/12/08/example-mapping-introduction">Example Mapping</a>.</li>
       <li><span class="fa-li"><i class="far fa-gem"></i></span> Contributors to the <a href=https://www.ruby-lang.org/en/>Ruby programming language</a> &amp; <a href=https://rubyonrails.org>Ruby on Rails web application framework</a>.</li>
-      <li><span class="fa-li"><i class="fas fa-code-branch"></i></span> Maintainers of open-source software written in Ruby, <a href="https://clojure.org">Clojure</a>, <a href="https://php.net">PHP</a>, <a href="https://www.rust-lang.org">Rust</a> &amp; <a href="https://nodejs.org/en/">JavaScript</a>.</li>
+      <li><span class="fa-li"><i class="fas fa-code-branch"></i></span> Maintainers of open-source software written in Ruby, <a href="https://clojure.org">Clojure</a>, <a href="https://php.net">PHP</a>, <a href="https://www.rust-lang.org">Rust</a>, <a href="https://nodejs.org/en/">JavaScript</a> &amp; <a href="https://www.vim.org">Vim script</a>.</li>
       <li><span class="fa-li"><i class="far fa-comment"></i></span> Speakers at software development events such as the <a href="https://skillsmatter.com/skillscasts/6282-exploring-to_proc">London Ruby User Group</a> and organisers of <a href="http://london.computation.club/">London Computation Club</a>.</li>
       <li><span class="fa-li"><i class="fas fa-cloud-upload-alt"></i></span> Experience building continuous delivery processes &amp; pipelines using <a href="https://github.com">GitHub</a>, <a href="https://aws.amazon.com">Amazon Web Services</a>, <a href="https://www.heroku.com">Heroku</a>, <a href="https://www.docker.com">Docker</a>, <a href="https://www.nomadproject.io">HashiCorp Nomad</a>, <a href="https://www.consul.io">Consul</a> &amp; <a href="https://www.terraform.io">Terraform</a>.</li>
       <li><span class="fa-li"><i class="fas fa-broom"></i></span> Expertise in reducing technical debt &amp; improving software quality in large, established projects.</li>
