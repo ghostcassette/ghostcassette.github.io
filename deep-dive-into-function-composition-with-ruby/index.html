@@ -1,0 +1,249 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset=utf-8>
+    <title>A Deep Dive into Function Composition with Ruby - Ghost Cassette - Software Development Consultancy</title>
+    <meta name=description content="In this post, I will explain Ruby 2.6's “function composition” and how its new operators work, including how you can use them not just with Proc and Method but with any object that implements call.">
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <style>
+      html {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100%;
+      }
+      @media screen {
+        body {
+          max-width: 40rem;
+          margin: 3rem;
+        }
+      }
+      body {
+        background: #233057;
+        background: -moz-linear-gradient(-45deg, rgba(35,48,87,1) 0%, rgba(39,69,97,1) 24%, rgba(33,65,74,1) 39%, rgba(39,97,94,1) 62%, rgba(35,87,69,1) 100%);
+        background: -webkit-linear-gradient(-45deg, rgba(35,48,87,1) 0%, rgba(39,69,97,1) 24%, rgba(33,65,74,1) 39%, rgba(39,97,94,1) 62%, rgba(35,87,69,1) 100%);
+        background: linear-gradient(-45deg, rgba(35,48,87,1) 0%, rgba(39,69,97,1) 24%, rgba(33,65,74,1) 39%, rgba(39,97,94,1) 62%, rgba(35,87,69,1) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#233057",endColorstr="#235745",GradientType=1);
+        color: #fff;
+        font: 1em/1.4 -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+      }
+      a {
+        color: #fff;
+        text-decoration: none;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.6);
+      }
+      footer a {
+        color: inherit;
+      }
+      .ghost {
+        width: 64px;
+        height: 64px;
+        background: url(../gc-logo-final-white.png);
+        background-position: -8px 0;
+        background-size: cover;
+        background-image: url(../gc-logo-final-white.svg), none;
+        background-repeat: no-repeat;
+        float: left;
+        opacity: 0.6;
+      }
+      footer {
+        color: rgba(255, 255, 255, 0.6);
+        margin-left: 64px;
+      }
+      code {
+        font-family: "Source Code Pro", Menlo, monospace;
+      }
+      blockquote {
+        border-left: 2px solid rgba(255, 255, 255, 0.6);
+        background: rgba(255, 255, 255, 0.15);
+        margin-left: 0;
+        margin-right: 0;
+        padding: 1rem;
+      }
+      blockquote p:first-child {
+        margin-top: 0;
+      }
+      blockquote p:last-child {
+        margin-bottom: 0;
+      }
+      pre {
+        background: rgba(255, 255, 255, 0.09);
+        margin-left: 0;
+        margin-right: 0;
+        padding: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>A Deep Dive into Function Composition with Ruby</h1>
+    <p>The <a href="https://www.ruby-lang.org/en/news/2018/12/25/ruby-2-6-0-released/">release of Ruby 2.6</a> in December 2018 included the following &ldquo;notable new feature&rdquo;:</p>
+    <blockquote><p>Add function composition operators <code>&lt;&lt;</code> and <code>&gt;&gt;</code> to <code>Proc</code> and <code>Method</code>. <a href="https://bugs.ruby-lang.org/issues/6284">[Feature #6284]</a></p></blockquote>
+    <p>In this post, I will explain &ldquo;function composition&rdquo; and how these new operators work, including how you can use them not just with <a href="https://ruby-doc.org/core-2.6.3/Proc.html"><code>Proc</code></a> and <a href="https://ruby-doc.org/core-2.6.3/Method.html"><code>Method</code></a> but with any object that implements <code>call</code>.</p>
+    <ol>
+      <li><a href="#what-is-function-composition">What is function composition?</a></li>
+      <li><a href="#ruby-feature-proposal">The Ruby feature proposal</a></li>
+      <li><a href="#function-composition-in-ruby">Function composition in Ruby</a></li>
+    </ol>
+    <div id="what-is-function-composition">
+      <h2><a href="#what-is-function-composition">What is function composition?</a></h2>
+      <p>Before we get into Ruby&rsquo;s implementation of function composition, let&rsquo;s be clear what it actually <em>means</em>. <a href="https://en.wikipedia.org/wiki/Function_composition_(computer_science)">Wikipedia describes function composition as follows:</a>
+      <blockquote><p>In computer science, function composition is an act or mechanism to combine simple <a href="https://en.wikipedia.org/wiki/Subroutine">functions</a> to build more complicated ones. Like the usual <a href="https://en.wikipedia.org/wiki/Function_composition">composition of functions</a> in mathematics, the result of each function is passed as the argument of the next, and the result of the last one is the result of the whole.</p></blockquote>
+      <p>Let&rsquo;s think of a simple example of a function: something that takes a single number as input and returns double that number, e.g.</p>
+      <pre><code>double(x) = x * 2
+double(2) = 4
+double(3) = 6
+double(4) = 8</code></pre>
+      <p>Now let&rsquo;s imagine another simple function that squares a number (that is, multiplies it by itself):</p>
+      <pre><code>square(x) = x * x
+square(2) = 4
+square(3) = 9
+square(4) = 16</code></pre>
+      <p>If we wanted to first double a number and then square the result, we could call each function individually with our desired input, e.g.</p>
+      <pre><code>double(2) = 4
+square(4) = 16</code></pre>
+      <p>As our functions only calculate their result from their given input and have no side-effects (see <a href="https://en.wikipedia.org/wiki/Referential_transparency">&ldquo;referential transparency</a>&rdquo; for more information on this topic), we could try to combine them more directly:</p>
+      <pre><code>square(double(2)) = 16</code></pre>
+      <p>(Note that this might read in an unusual way: we&rsquo;re doubling our input <code>2</code> first and then squaring the result but, reading left-to-right, you see the call to <code>square</code> and then the call to <code>double</code>. However, the call to <code>double</code> will be executed first as it is the innermost function call before the outer call to <code>square</code>.)</p>
+      <p>For convenience, we could define a new function to do this operation for us:</p>
+      <pre><code>double-then-square(x) = square(double(x))
+double-then-square(2) = 16
+double-then-square(3) = 36
+double-then-square(4) = 64</code></pre>
+      <p>Tada! We have composed the two functions <code>double</code> and <code>square</code> into a new one, the pithily-named <code>double-then-square</code>!</p>
+      <p>While composing functions yourself might seem relatively straightforward, some programming languages have a &ldquo;first-class&rdquo; notion of function composition which allow us to compose functions without having to define new functions ourselves. Perhaps the most concise example is <a href="https://wiki.haskell.org/Function_composition">Haskell&rsquo;s function composition</a> through the <code>.</code> operator:</p>
+      <pre><code>doubleThenSquare = square . double</code></pre>
+      <p>As in our previous example, this returns a new function which will call <code>double</code> and then call <code>square</code> with the result, returning the final result to us.</p>
+      <p>In a <a href="https://en.wikipedia.org/wiki/Functional_programming">programming language where programs are largely written as a series of functions</a>, having first-class function composition makes it easier for authors to compose behaviour from existing functions, possibly encouraging the breaking down of large functions into smaller, simpler parts.</p>
+      <p>So where does Ruby come into this?</p>
+    </div>
+    <div id="ruby-feature-proposal">
+      <h2><a href="#ruby-feature-proposal">The Ruby feature proposal</a></h2>
+      <p>In 2012, <a href="https://bugs.ruby-lang.org/issues/6284">Pablo Herrero proposed that Ruby should offer composition for <code>Proc</code></a> (which behave much like the functions we defined above) with the following example:</p>
+      <blockquote>
+        <p>It would be nice to be able to compose procs like functions in functional programming languages:</p>
+<pre><code>to_camel = :capitalize.to_proc
+add_header = -&gt;val {"Title: " + val}
+
+format_as_title = add_header &lt;&lt; to_camel &lt;&lt; :strip</code></pre>
+<p><i>(sic)</i> instead of:</p>
+<pre><code>format_as_title = lambda {|val| "Title: " + val.strip.capitalize }</code></pre>
+      </blockquote>
+      <p>Herrero provided a pure Ruby implementation which would add <code>&lt;&lt;</code> as a method on <code>Proc</code> and behave as follows:</p>
+      <pre><code>double = -&gt; (number) { number * 2 }
+square = -&gt; (number) { number * number }
+double_then_square = square &lt;&lt; double
+double_then_square.call(2)
+# =&gt; 16</code></pre>
+      <p>That same day, a <a href="https://bugs.ruby-lang.org/issues/6284#note-1">debate over the exact syntax Ruby should adopt for this feature</a> began. Some argued for <code>+</code>, others for <code>*</code> (as a close approximation of Haskell's aforementioned syntax) and some for <code>|</code>. In <a href="https://bugs.ruby-lang.org/issues/6284#note-11">October that year, Matz weighed in</a>:</p>
+      <blockquote><p>Positive about adding function composition. But we need method name consensus before adding it? Is <code>#*</code> OK for everyone?</p></blockquote>
+      <p>Unfortunately, consensus was not forthcoming (with <code>&lt;-</code> being added to the debate) over the next two years.</p>
+      <p>In 2015, after spending some time doing functional programming in <a href="https://clojure.org">Clojure</a> and finding the dormant proposal, <a href="https://bugs.ruby-lang.org/issues/6284#note-26">I contributed a series of patches to Ruby to implement composition on <code>Proc</code> and <code>Method</code></a>. Keen to progress the debate, I picked <code>*</code> as the operator:</p>
+      <pre><code>double_then_square = square * double
+double_then_square.call(2)
+# =&gt; 16</code></pre>
+      <p><a href="https://bugs.ruby-lang.org/issues/6284#note-29">Herrero responded by proposing syntax</a> inspired by <a href="https://docs.microsoft.com/en-gb/dotnet/fsharp/language-reference/functions/index#function-composition-and-pipelining">F#&rsquo;s function composition</a>:</p>
+      <blockquote><p>It would be nice to be able to compose functions in both ways, like in F#, you can do g &lt;&lt; f or g &gt;&gt; f, sadly this was rejected before.</p></blockquote>
+      <p>These two syntaxes would allow for both &ldquo;backward&rdquo; composition with <code>&lt;&lt;</code> and &ldquo;forward&rdquo; composition with <code>&gt;&gt;</code>:</p>
+      <pre><code>double_then_square = double &gt;&gt; square
+double_then_square.call(2)
+# =&gt; 16</code></pre>
+      <p>Another three years passed and the feature was finally <a href="https://bugs.ruby-lang.org/projects/ruby-trunk/repository/trunk/revisions/65911">merged into Ruby 2.6 by Nobuyoshi Nakada</a> who took my original patches and changed the syntax from <code>*</code> to <code>&lt;&lt;</code> and <code>&gt;&gt;</code>.</p>
+    </div>
+
+    <div id="function-composition-in-ruby">
+      <h2><a href="#function-composition-in-ruby">Function composition in Ruby</a></h2>
+      <p>So now we know what function composition is and how it got into Ruby 2.6, how does it work?</p>
+      <p>Internally, the way composition works regardless whether you&rsquo;re <a href="https://github.com/ruby/ruby/blob/v2_6_0/proc.c#L3066-L3097">composing to the left with <code>&lt;&lt;</code></a>, <a href="https://github.com/ruby/ruby/blob/v2_6_0/proc.c#L3099-L3130">composing to the right with <code>&gt;&gt;</code></a>, composing <code>Proc</code>s or composing <code>Method</code>s is to create a new <code>Proc</code> (preserving <a href="https://ruby-doc.org/core-2.6.3/Proc.html#method-i-lambda-3F">whether the receiver is a lambda or not</a>) that composes our functions for us. The entire feature is roughly equivalent to the following Ruby code:</p>
+      <pre><code>class Proc
+  def &lt;&lt;(g)
+    if lambda?
+      lambda { |*args, &amp;blk| call(g.call(*args, &amp;blk)) }
+    else
+      proc { |*args, &amp;blk| call(g.call(*args, &amp;blk)) }
+    end
+  end
+
+  def &gt;&gt;(g)
+    if lambda?
+      lambda { |*args, &amp;blk| g.call(call(*args, &amp;blk)) }
+    else
+      proc { |*args, &amp;blk| g.call(call(*args, &amp;blk)) }
+    end
+  end
+end
+
+class Method
+  def &lt;&lt;(g)
+    to_proc &lt;&lt; g
+  end
+
+  def &gt;&gt;(g)
+    to_proc &gt;&gt; g
+  end
+end</code></pre>
+      <p>This means we can compose <code>Proc</code> and <code>Method</code> objects in various configurations:</p>
+      <pre><code>(double &gt;&gt; square).call(2)
+# =&gt; 16
+
+(double &gt;&gt; square &gt;&gt; Kernel.method(:puts)).call(2)
+# 16
+# =&gt; nil
+
+(Kernel.method(:rand) &gt;&gt; square &gt;&gt; Kernel.method(:puts)).call
+# 0.010775469851890788
+# =&gt; nil</code></pre>
+      <p>It also means that if you start with a lambda, composing to the left and the right will always produce a new lambda:</p>
+      <pre><code>square.lambda?
+# =&gt; true
+
+not_a_lambda = proc { nil }
+not_a_lambda.lambda?
+# =&gt; false
+
+(square &gt;&gt; not_a_lambda).lambda?
+# =&gt; true
+
+(square &lt;&lt; not_a_lambda).lambda?
+# =&gt; true</code></pre>
+      <p>Similarly, starting with a non-lambda <code>Proc</code> or a <code>Method</code> will never give you a lambda back regardless of the right-hand operand:</p>
+      <pre><code>(not_a_lambda &gt;&gt; square).lambda?
+# =&gt; false
+
+not_a_lambda &lt;&lt; square).lambda?
+# =&gt; false</code></pre>
+      <p>Don&rsquo;t forget that Ruby objects can transform themselves into <code>Proc</code> by implementing <code>to_proc</code>. Objects such as <code>Symbol</code> and <code>Hash</code> have default implementations to call methods of the same name and look up values respectively:</p>
+      <pre><code>(
+  { name: "Alice", age: 42 }.to_proc &gt;&gt;
+  :upcase.to_proc
+).call(:name)
+# =&gt; "ALICE"</code></pre>
+      <p>The other key thing to note is that the right-hand operand can be a <code>Proc</code>, a <code>Method</code> or <em>anything that responds to <code>call</code></em>.</p>
+      <pre><code>class Greeter
+  attr_reader :greeting
+
+  def initialize(greeting)
+    @greeting = greeting
+  end
+
+  def call(subject)
+    "#{greeting}, #{subject}!"
+  end
+end
+
+(
+  :upcase.to_proc &gt;&gt;
+  Greeter.new("Hello") &gt;&gt;
+  Kernel.method(:puts)
+).call("world")
+# Hello, WORLD
+# =&gt; nil</code></pre>
+      <p>Note this only works if your receiver is a <code>Proc</code> or a <code>Method</code> though, so you couldn&rsquo;t put <code>Greeter</code> first in the chain above (as it does not implement <code>&gt;&gt;</code>).</p>
+    </div>
+
+    <div class=ghost>&nbsp;</div>
+    <footer><a href=/>Ghost Cassette Ltd</a> is registered in England and Wales with company number 11839376 and VAT registration number GB 316886961.<br>Registered office: 13b The Vale, London, England, W3 7SH</footer>
+  </body>
+</html>
