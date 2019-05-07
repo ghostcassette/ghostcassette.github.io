@@ -125,7 +125,7 @@ double-then-square(4) = 64</code></pre>
       <p>As in our previous example, this returns a new function which will call <code>double</code> and then call <code>square</code> with the result, returning the final result to us.</p>
       <p>The order of operations might be confusing here: reading left to right, we first refer to <code>square</code> and then to <code>double</code> but when we call our <code>doubleThenSquare</code> function the order in which our component functions are called is in the opposite order. This is because the <a href="https://en.wikipedia.org/wiki/Function_composition">mathematical definition of function composition</a> is as follows:</p>
       <pre><code>(g &#8728; f)(x) = g(f(x))</code></pre>
-      <p>This notation can be read &ldquo;<code>g</code> after <code>f</code>&rdquo; (or &ldquo;<code>g</code> following <code>f</code>&rsquo;) which might help remember the order of application when you call your composite function.</p>
+      <p>This notation can be read &ldquo;<code>g</code> after <code>f</code>&rdquo; (or &ldquo;<code>g</code> following <code>f</code>&rdquo;) which might help when remembering the order of application when you call your composite function.</p>
       <p>In a <a href="https://en.wikipedia.org/wiki/Functional_programming">programming language where programs are largely written as a series of functions</a>, having first-class function composition makes it easier for authors to compose behaviour from existing functions, possibly encouraging the breaking down of large functions into smaller, simpler parts.</p>
       <p>So where does Ruby come into this?</p>
     </div>
@@ -156,6 +156,7 @@ double = make_proc { |number| number * 2 }
 <b>end</b>
 
 double = make_proc { |number| number * 2 }</code></pre>
+      <p>(See &ldquo;<a href="https://mudge.name/2011/01/26/passing-blocks-in-ruby-without-block.html">Passing Blocks in Ruby Without <code>&amp;block</code></a>&rdquo; for more information on this last constructor.)</p>
       <p>We can use a <code>Proc</code> by calling its <code>call</code> method with any arguments we desire. There are also a few shorthand alternatives we can use for brevity:</p>
       <pre><code>double.call(2) <i># =&gt; 4</i>
 double.(2)     <i># =&gt; 4</i>
@@ -232,7 +233,7 @@ method_with_proc_return
 <b>end</b>
 
 greeter = Greeter.new("Hello")
-greet = greeter.method(:greet)
+greet = greeter.method(<b>:greet</b>)
 <i># =&gt; #&lt;Method: Greeter#greet&gt;</i></code></pre>
       <p>These can then be called in exactly the same way as <code>Proc</code>:</p>
       <pre><code>greet.call("world") <i># =&gt; "Hello, world!"</i>
@@ -246,12 +247,12 @@ greet === "world"   <i># =&gt; "Hello, world!"</i></code></pre>
       <p>In 2012, <a href="https://bugs.ruby-lang.org/issues/6284">Pablo Herrero proposed that Ruby should offer composition for <code>Proc</code></a> with the following example:</p>
       <blockquote>
         <p>It would be nice to be able to compose procs like functions in functional programming languages:</p>
-<pre><code>to_camel = :capitalize.to_proc
+<pre><code>to_camel = <b>:capitalize</b>.to_proc
 add_header = <b>-&gt;</b>val {"Title: " + val}
 
-format_as_title = add_header &lt;&lt; to_camel &lt;&lt; :strip</code></pre>
+format_as_title = add_header &lt;&lt; to_camel &lt;&lt; <b>:strip</b></code></pre>
 <p>instead of:</p>
-<pre><code>format_as_title = lambda {|val| "Title: " + val.strip.capitalize }</code></pre>
+<pre><code>format_as_title = <b>lambda</b> {|val| "Title: " + val.strip.capitalize }</code></pre>
       </blockquote>
       <p>Herrero provided a pure Ruby implementation which would add <code>&lt;&lt;</code> as a method on <code>Proc</code> and behave as follows:</p>
       <pre><code>double = <b>-&gt;</b>(number) { number * 2 }
@@ -322,11 +323,11 @@ double_then_square.call(2) <i># =&gt; 16</i></code></pre>
       <pre><code>(double &gt;&gt; square).call(2)
 <i># =&gt; 16</i>
 
-(double &gt;&gt; square &gt;&gt; Kernel.method(:puts)).call(2)
+(double &gt;&gt; square &gt;&gt; Kernel.method(<b>:puts</b>)).call(2)
 <i># 16
 # =&gt; nil</i>
 
-(Kernel.method(:rand) &gt;&gt; square &gt;&gt; Kernel.method(:puts)).call
+(Kernel.method(<b>:rand</b>) &gt;&gt; square &gt;&gt; Kernel.method(<b>:puts</b>)).call
 <i># 0.010775469851890788
 # =&gt; nil</i></code></pre>
       <p>It also means that if you start with a lambda, composing to the left and the right will always produce a new lambda:</p>
@@ -353,16 +354,16 @@ not_a_lambda &lt;&lt; square).lambda?
         <li><a href="http://ruby-doc.org/core-2.6.3/Hash.html#method-i-to_proc"><code>Hash</code></a> will return a <code>Proc</code> that takes a key as input and returns the corresponding value from the hash or <code>nil</code> if it is not found</li>
         <li><a href="http://ruby-doc.org/core-2.6.3/Symbol.html#method-i-to_proc"><code>Symbol</code></a> will return a <code>Proc</code> that takes an object and will call the method with the symbol&rsquo;s name on it</li>
       </ul>
-      <pre><code>{ name: "Alice", age: 42 }.to_proc.call(:name)
+      <pre><code>{ <b>name:</b> "Alice", <b>age:</b> 42 }.to_proc.call(<b>:name</b>)
 <i># => "Alice"</i>
 
-:upcase.to_proc.call("hello")
+<b>:upcase</b>.to_proc.call("hello")
 <i># => "HELLO"</i></code></pre>
       <p>These can then be composed as with regular <code>Proc</code> objects:</p>
       <pre><code>(
-  { name: "Alice", age: 42 }.to_proc &gt;&gt;
-  :upcase.to_proc
-).call(:name)
+  { <b>name:</b> "Alice", <b>age:</b> 42 }.to_proc &gt;&gt;
+  <b>:upcase</b>.to_proc
+).call(<b>:name</b>)
 <i># =&gt; "ALICE"</i></code></pre>
       <p>The other key thing to note is that the right-hand operand can be a <code>Proc</code>, a <code>Method</code> or <em>anything that responds to <code>call</code></em>.</p>
       <pre><code><b>class</b> Greeter
@@ -378,9 +379,9 @@ not_a_lambda &lt;&lt; square).lambda?
 <b>end</b>
 
 (
-  :upcase.to_proc &gt;&gt;
+  <b>:upcase</b>.to_proc &gt;&gt;
   Greeter.new("Hello") &gt;&gt;
-  Kernel.method(:puts)
+  Kernel.method(<b>:puts</b>)
 ).call("world")
 <i># Hello, WORLD
 # =&gt; nil</i></code></pre>
