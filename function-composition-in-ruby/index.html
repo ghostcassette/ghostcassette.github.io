@@ -184,40 +184,40 @@ double = -&gt;(number) { number * 2 }</code></pre>
         <li>In lambdas, the number of arguments must match the definition exactly (as in a method definition with <code>def</code>) but in procs, missing arguments are replaced with <code>nil</code>, single array arguments are deconstructed if the proc has multiple arguments and no error is raised if too many arguments are passed</li>
       </ul>
       <p>We can demonstrate these differences with the following examples:</p>
-      <pre><code><b>def</b> calling_a_lambda_with_bad_arguments
+      <pre><code><b>def</b> lambda_with_bad_arguments
   lambda = -&gt;(x, y) { "#{x} and #{y}" }
   lambda.call([1, 2, 3])
 <b>end</b>
 
-calling_a_lambda_with_bad_arguments
+lambda_with_bad_arguments
 <i># ArgumentError: wrong number of arguments (given 1, expected 2)</i>
 
-<b>def</b> method_with_lambda_return
+<b>def</b> lambda_return
   lambda = -&gt; { <b>return</b> }
   lambda.call
 
   "This will be reached"
 <b>end</b>
 
-method_with_lambda_return
+lambda_return
 <i># =&gt; "This will be reached"</i>
 
-<b>def</b> calling_a_proc_with_bad_arguments
+<b>def</b> proc_with_bad_arguments
   proc = proc { |x, y| "#{x} and #{y}" }
   proc.call([1, 2, 3])
 <b>end</b>
 
-calling_a_proc_with_bad_arguments
+proc_with_bad_arguments
 <i># =&gt; "1 and 2"</i>
 
-<b>def</b> method_with_proc_return
+<b>def</b> proc_return
   proc = <b>proc</b> { <b>return</b> }
   proc.call
 
   "This will not be reached"
 <b>end</b>
 
-method_with_proc_return
+proc_return
 <i># =&gt; nil</i></code></pre>
       <p>The other Ruby feature that we can use as a first-class function is <a href="http://ruby-doc.org/core-2.6.3/Method.html"><code>Method</code></a>. This allows us to represent methods defined on objects (e.g. with <code>def</code>) as objects themselves:</p>
       <pre><code><b>class</b> Greeter
