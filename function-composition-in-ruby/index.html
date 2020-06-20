@@ -6,43 +6,127 @@
     <meta name=description content="In this post, I will explain Ruby 2.6's “function composition” and how its new operators work, including how you can use them not just with Proc and Method but with any object that implements call.">
     <meta name=viewport content="width=device-width, initial-scale=1">
     <style>
+      html, body, div, span, applet, object, iframe,
+      h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+      a, abbr, acronym, address, big, cite, code,
+      del, dfn, em, img, ins, kbd, q, s, samp,
+      small, strike, strong, sub, sup, tt, var,
+      b, u, i, center,
+      dl, dt, dd, ol, ul, li,
+      fieldset, form, label, legend,
+      table, caption, tbody, tfoot, thead, tr, th, td,
+      article, aside, canvas, details, embed, 
+      figure, figcaption, footer, header, hgroup, 
+      menu, nav, output, ruby, section, summary,
+      time, mark, audio, video {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 100%;
+        font: inherit;
+        vertical-align: baseline;
+      }
+      blockquote, q {
+        quotes: none;
+      }
+      blockquote:before, blockquote:after,
+      q:before, q:after {
+        content: '';
+        content: none;
+      }
       html {
         display: flex;
         align-items: center;
         justify-content: center;
         min-height: 100%;
       }
-      @media screen {
-        body {
-          max-width: 40rem;
-          margin: 3rem;
-        }
-      }
       body {
+        max-width: 40rem;
         background: #233057;
         background: -moz-linear-gradient(-45deg, rgba(35,48,87,1) 0%, rgba(39,69,97,1) 24%, rgba(33,65,74,1) 39%, rgba(39,97,94,1) 62%, rgba(35,87,69,1) 100%);
         background: -webkit-linear-gradient(-45deg, rgba(35,48,87,1) 0%, rgba(39,69,97,1) 24%, rgba(33,65,74,1) 39%, rgba(39,97,94,1) 62%, rgba(35,87,69,1) 100%);
         background: linear-gradient(-45deg, rgba(35,48,87,1) 0%, rgba(39,69,97,1) 24%, rgba(33,65,74,1) 39%, rgba(39,97,94,1) 62%, rgba(35,87,69,1) 100%);
         filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#233057",endColorstr="#235745",GradientType=1);
         color: #fff;
-        font: 1em/1.4 -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         text-rendering: optimizeLegibility;
+        margin: 0 1.5rem;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        -webkit-hyphens: auto;
+        -moz-hyphens: auto;
+        hyphens: auto;
+        font: 16px -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, sans-serif;
+        line-height: 1.5rem;
+      }
+      h1 {
+        font-size: 2rem;
+        font-weight: bold;
+        line-height: 2.25rem;
+        margin-top: 1.5rem;
+      }
+      h2 {
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 2.25rem;
+      }
+      .byline {
+        font-style: normal;
+        font-weight: normal;
+        font-size: 1rem;
+        line-height: 1.5rem;
+        color: rgba(255, 255, 255, 0.6);
+        margin-bottom: 0.667rem;
+      }
+      p {
+        margin-bottom: 1.5rem;
+      }
+      blockquote {
+        border-left: 2px solid rgba(255, 255, 255, 0.6);
+        background: rgba(255, 255, 255, 0.15);
+        margin-bottom: 1.5rem;
+        padding: 1rem 1.5rem;
+      }
+      blockquote :last-child {
+        margin-bottom: 0;
+      }
+      ul, ol {
+        margin-bottom: 1.5rem;
+        padding-left: 1.5rem;
       }
       a {
         color: #fff;
-        text-decoration: none;
-        border-bottom: 2px solid rgba(255, 255, 255, 0.6);
+        text-decoration: underline;
+        text-decoration-color: rgba(255, 255, 255, 0.6);
+        text-decoration-thickness: 0.1rem;
+        text-underline-offset: 0.1rem;
+      }
+      code {
+        line-height: 1rem;
+        font-family: "Source Code Pro", Menlo, monospace;
+      }
+      pre {
+        background: rgba(255, 255, 255, 0.09);
+        padding: 1rem 1.5rem;
+        white-space: pre-wrap;
+        margin-bottom: 1.5rem;
+      }
+      code i {
+        color: rgba(255, 255, 255, 0.6);
+        font-style: italic;
+      }
+      code b {
+        font-weight: bold;
       }
       footer a {
         color: inherit;
       }
       .ghost {
-        width: 64px;
-        height: 64px;
+        width: 54px;
+        height: 72px;
         background: url(../gc-logo-final-white.png);
-        background-position: -8px 0;
+        background-position: -9px 0;
         background-size: cover;
         background-image: url(../gc-logo-final-white.svg), none;
         background-repeat: no-repeat;
@@ -51,48 +135,13 @@
       }
       footer {
         color: rgba(255, 255, 255, 0.6);
-        margin-left: 64px;
-      }
-      code {
-        font-family: "Source Code Pro", Menlo, monospace;
-      }
-      blockquote {
-        border-left: 2px solid rgba(255, 255, 255, 0.6);
-        background: rgba(255, 255, 255, 0.15);
-        margin-left: 0;
-        margin-right: 0;
-        padding: 1rem;
-      }
-      blockquote p:first-child {
-        margin-top: 0;
-      }
-      blockquote p:last-child, blockquote pre:last-child {
-        margin-bottom: 0;
-      }
-      pre {
-        background: rgba(255, 255, 255, 0.09);
-        margin-left: 0;
-        margin-right: 0;
-        padding: 1rem;
-        white-space: pre-wrap;
-      }
-      code i {
-        color: rgba(255, 255, 255, 0.6);
+        margin-left: 78px;
+        margin-bottom: 1.5rem;
       }
       .bio {
         font-style: italic;
         background: rgba(255, 255, 255, 0.09);
-        padding: 1rem;
-      }
-      h1 {
-        margin-bottom: 0;
-      }
-      .byline {
-        margin: 0;
-        font-style: normal;
-        font-weight: normal;
-        font-size: 1rem;
-        color: rgba(255, 255, 255, 0.6);
+        padding: 1rem 1.5rem;
       }
     </style>
   </head>
@@ -100,7 +149,9 @@
     <h1>A Guide to Function Composition in Ruby</h1>
     <h2 class="byline">by Paul Mucur on Wednesday, 8th May 2019</h2>
     <p>The <a href="https://www.ruby-lang.org/en/news/2018/12/25/ruby-2-6-0-released/">release of Ruby 2.6</a> in December 2018 included the following &ldquo;notable new feature&rdquo;:</p>
-    <blockquote><p>Add function composition operators <code>&lt;&lt;</code> and <code>&gt;&gt;</code> to <code>Proc</code> and <code>Method</code>. <a href="https://bugs.ruby-lang.org/issues/6284">[Feature #6284]</a></p></blockquote>
+    <blockquote>
+      <p>Add function composition operators <code>&lt;&lt;</code> and <code>&gt;&gt;</code> to <code>Proc</code> and <code>Method</code>. <a href="https://bugs.ruby-lang.org/issues/6284">[Feature #6284]</a></p>
+    </blockquote>
     <p>In this post, I will explain &ldquo;function composition&rdquo; and how these new operators work, including how you can use them not just with <a href="https://ruby-doc.org/core-2.6.3/Proc.html"><code>Proc</code></a> and <a href="https://ruby-doc.org/core-2.6.3/Method.html"><code>Method</code></a> but with any object that implements <code>call</code>.</p>
 
     <ol>

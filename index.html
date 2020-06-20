@@ -6,6 +6,26 @@
     <meta name=description content="Ghost Cassette is a software development consultancy specialising in web application development, continuous delivery, agile coaching, mentoring and leading software development teams.">
     <meta name=viewport content="width=device-width, initial-scale=1">
     <style>
+      html, body, div, span, applet, object, iframe,
+      h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+      a, abbr, acronym, address, big, cite, code,
+      del, dfn, em, img, ins, kbd, q, s, samp,
+      small, strike, strong, sub, sup, tt, var,
+      b, u, i, center,
+      dl, dt, dd, ol, ul, li,
+      fieldset, form, label, legend,
+      table, caption, tbody, tfoot, thead, tr, th, td,
+      article, aside, canvas, details, embed, 
+      figure, figcaption, footer, header, hgroup, 
+      menu, nav, output, ruby, section, summary,
+      time, mark, audio, video {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 100%;
+        font: inherit;
+        vertical-align: baseline;
+      }
       html {
         display: flex;
         align-items: center;
@@ -38,30 +58,10 @@
       .n p {
         text-align: left;
         background: rgba(255, 255, 255, 0.2);
-        padding: 0.75rem 1.5rem;
-        border-radius: 0.75rem;
+        padding: 0.667rem 1.5rem;
+        border-radius: 0.667rem;
         display: inline-block;
         margin-top: 1.5rem;
-      }
-      h1 {
-        font-size: 2rem;
-        line-height: 3rem;
-        margin: 1.5rem 0;
-      }
-      p {
-        margin-top: 0;
-        margin-bottom: 1.5rem;
-      }
-      ul {
-        margin-bottom: 0;
-      }
-      li {
-        margin-bottom: 1.5rem;
-      }
-      a {
-        color: #fff;
-        text-decoration: none;
-        border-bottom: 2px solid rgba(255, 255, 255, 0.6);
       }
       .ghost {
         width: 92px;
@@ -71,6 +71,29 @@
         background-position: -15px 0;
         background-image: url(gc-logo-final-white.svg), none;
         background-repeat: no-repeat;
+        margin-bottom: 1.5rem;
+      }
+      h1 {
+        font-size: 2rem;
+        font-weight: bold;
+        line-height: 2.25rem;
+        margin-bottom: 1.5rem;
+      }
+      p, ul {
+        margin-bottom: 1.5rem;
+      }
+      li {
+        margin-bottom: 1rem;
+      }
+      li:last-child {
+        margin-bottom: 0;
+      }
+      a {
+        color: #fff;
+        text-decoration: underline;
+        text-decoration-color: rgba(255, 255, 255, 0.6);
+        text-decoration-thickness: 0.1rem;
+        text-underline-offset: 0.1rem;
       }
       footer {
         color: rgba(255, 255, 255, 0.6);
@@ -81,10 +104,11 @@
         background: rgba(255,255,255,0.9);
         color: #233057;
         display: block;
-        padding: 0.75rem 1.5rem;
+        padding: 0.667rem 1.5rem;
         font-weight: 700;
         border-width: 0;
-        border-radius: 0.75rem;
+        border-radius: 0.667rem;
+        text-decoration: none;
       }
       .fa,
       .far,
