@@ -1,0 +1,10 @@
+title: Ghost Cassette
+email: hello@ghostcassette.com
+description: >-
+  Ghost Cassette is a software development consultancy specialising in web
+  application development, continuous delivery, agile coaching, mentoring and
+  leading software development teams.
+url: "https://www.ghostcassette.com"
+github_username: ghostcassette
+markdown: kramdown
+permalink: /:slug/

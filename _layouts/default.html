@@ -1,0 +1,194 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset=utf-8>
+    <title>{{ page.title }} - Ghost Cassette - Software Development Consultancy</title>
+    <meta name=description content="{{ page.description }}">
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <style>
+      html, body, div, span, h1, h2, p, blockquote, pre, a, abbr, code, em,
+      strong, b, u, i, ol, ul, li, footer, time {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 100%;
+        font: inherit;
+        vertical-align: baseline;
+      }
+      blockquote, q {
+        quotes: none;
+      }
+      blockquote:before, blockquote:after,
+      q:before, q:after {
+        content: '';
+        content: none;
+      }
+      html {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100%;
+      }
+      body {
+        max-width: 40rem;
+        background: #233057;
+        background: -moz-linear-gradient(-45deg, rgba(35,48,87,1) 0%, rgba(39,69,97,1) 24%, rgba(33,65,74,1) 39%, rgba(39,97,94,1) 62%, rgba(35,87,69,1) 100%);
+        background: -webkit-linear-gradient(-45deg, rgba(35,48,87,1) 0%, rgba(39,69,97,1) 24%, rgba(33,65,74,1) 39%, rgba(39,97,94,1) 62%, rgba(35,87,69,1) 100%);
+        background: linear-gradient(-45deg, rgba(35,48,87,1) 0%, rgba(39,69,97,1) 24%, rgba(33,65,74,1) 39%, rgba(39,97,94,1) 62%, rgba(35,87,69,1) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#233057",endColorstr="#235745",GradientType=1);
+        color: #fff;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+        margin: 1.5rem;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        -webkit-hyphens: auto;
+        -moz-hyphens: auto;
+        hyphens: auto;
+        font: 16px -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, sans-serif;
+        line-height: 1.5rem;
+      }
+      h1 {
+        font-size: 2rem;
+        font-weight: bold;
+        line-height: 2.25rem;
+        margin-top: 1.5rem;
+      }
+      h2 {
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 3rem;
+      }
+      .byline {
+        font-style: normal;
+        font-weight: normal;
+        font-size: 1rem;
+        line-height: 1.5rem;
+        color: rgba(255, 255, 255, 0.6);
+        margin-bottom: 0.75rem;
+      }
+      p {
+        margin-bottom: 1.5rem;
+      }
+      blockquote {
+        border-left: 2px solid rgba(255, 255, 255, 0.6);
+        background: rgba(255, 255, 255, 0.15);
+        margin-bottom: 1.5rem;
+        padding: 1.5rem;
+      }
+      blockquote :last-child {
+        margin-bottom: 0;
+      }
+      ul, ol {
+        margin-bottom: 1.5rem;
+        padding-left: 1.5rem;
+      }
+      a {
+        color: #fff;
+        text-decoration: underline;
+        text-decoration-color: rgba(255, 255, 255, 0.6);
+        text-decoration-thickness: 0.1rem;
+        text-underline-offset: 0.1rem;
+      }
+      code {
+        line-height: 1rem;
+        font-family: "Source Code Pro", Menlo, monospace;
+      }
+      pre {
+        background: rgba(255, 255, 255, 0.09);
+        padding: 1.5rem;
+        white-space: pre-wrap;
+        margin-bottom: 1.5rem;
+      }
+      em {
+        font-style: italic;
+      }
+      code i {
+        color: rgba(255, 255, 255, 0.6);
+        font-style: italic;
+      }
+      code b {
+        font-weight: bold;
+      }
+      footer a {
+        color: inherit;
+      }
+      .ghost {
+        width: 54px;
+        height: 72px;
+        background: url(../gc-logo-final-white.png);
+        background-position: -9px 0;
+        background-size: cover;
+        background-image: url(../gc-logo-final-white.svg), none;
+        background-repeat: no-repeat;
+        float: left;
+        opacity: 0.6;
+      }
+      footer {
+        color: rgba(255, 255, 255, 0.6);
+        margin-left: 78px;
+      }
+      .bio {
+        font-style: italic;
+        background: rgba(255, 255, 255, 0.09);
+        padding: 1.5rem;
+      }
+      .example {
+        background: rgba(255, 255, 255, 0.09);
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+      button, input, optgroup, select, textarea {
+        font-family: inherit;
+        font-size: 100%;
+        line-height: 1.15;
+        margin: 0;
+      }
+      button, input {
+        overflow: visible;
+      }
+      button, select {
+        text-transform: none;
+      }
+      button, [type="button"], [type="reset"], [type="submit"] {
+        -webkit-appearance: button;
+      }
+      button::-moz-focus-inner, [type="button"]::-moz-focus-inner, [type="reset"]::-moz-focus-inner, [type="submit"]::-moz-focus-inner {
+        border-style: none;
+        padding: 0;
+      }
+      button:-moz-focusring, [type="button"]:-moz-focusring,
+      [type="reset"]:-moz-focusring, [type="submit"]:-moz-focusring {
+        outline: 1px dotted ButtonText;
+      }
+      .highlight .c, .highlight .cm, .highlight .c1, .highlight .cs,
+      .highlight .ge, .highlight .sd {
+        font-style: italic;
+      }
+      .highlight .k, .highlight .gh, .highlight .gp, .highlight .gs,
+      .highlight .gu, .highlight .kc, .highlight .kd, .highlight .kn,
+      .highlight .kr, .highlight .nc, .highlight .ni, .highlight .ne,
+      .highlight .nn, .highlight .nt, .highlight .ow, .highlight .se,
+      .highlight .si {
+        font-weight: bold;
+      }
+      .highlight .err {
+        border: 1px solid #FF0000;
+      }
+    </style>
+  </head>
+  <body>
+    <p><a href=/ rel=home>&larr; Back to the homepage</a></p>
+    <h1>{{ page.title }}</h1>
+    <h2 class=byline>by Paul Mucur on <time pubdate class=updated datetime={{ page.date | date_to_xmlschema }}>{{ page.date | date: "%A" }}, {{ page.date | date_to_long_string: "ordinal" }}</time></h2>
+
+    {{ content }}
+
+    <p class=bio><a href=https://mudge.name>Paul Mucur</a> is a software development consultant at Ghost Cassette, open source maintainer and Ruby and Ruby on Rails contributor.</p>
+
+    <div class=ghost>&nbsp;</div>
+    <footer><a href=/>Ghost Cassette Ltd</a> is registered in England and Wales with company number 11839376 and VAT registration number GB 316886961.<br>Registered office: 13b The Vale, London, England, W3 7SH</footer>
+  </body>
+</html>
+
